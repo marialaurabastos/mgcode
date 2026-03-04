@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
-  
+
   const config = new DocumentBuilder()
     .setTitle('API de Usuários e Tarefas')
     .setDescription('Documentação da API de exercício do NestJS')
@@ -17,9 +17,11 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
+  app.enableCors();
+
   await app.listen(3000);
-  console.log(`Servidor rodando em: http://localhost:3000/api`);
-  
+  console.log(`Servidor rodando em: http://localhost:3000`);
+
 }
 bootstrap();

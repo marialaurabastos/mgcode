@@ -90,6 +90,10 @@ button {
     background-color: #ffffff;
 }
 
+.status-badge.pendente { color: orange; font-weight: bold; }
+.status-badge.em_progresso { color: blue; font-weight: bold; }
+.status-badge.concluida { color: green; font-weight: bold; }
+
 .actions-column {
     text-align: center;
 }

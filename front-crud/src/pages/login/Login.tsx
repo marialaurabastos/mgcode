@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import "./login.css";''
 
 function Login() {
@@ -11,24 +11,25 @@ function Login() {
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/login", {
-        email,
-        password
-      });
+      const response = await api.post('/auth/login', { email, password });
 
-      if (response.data && response.data.user) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("loggedUser", response.data.user.username);
+      if (response.data && response.data.access_token) {
+        localStorage.setItem("token", response.data.access_token);
+
+        const userName = response.data.user?.name || "Usuário";
+        localStorage.setItem("loggedUser", userName);
         
-        alert(`Bem-vindo(a), ${response.data.user.username}!`);
-        navigate('/user');
+        alert(`Bem-vindo(a), ${userName}!`);
+
+        navigate('/tasks');
       } else {
         alert("Erro ao realizar o login");
       }
 
     } catch (error: any) {
       console.error("Login error", error);
-      alert(error.response?.data?.error || "Erro ao conectar com o servidor");
+      const message = error.response?.data?.message || "Erro ao conectar com o servidor";
+      alert(message);
     }
   };
 

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import "./mod-add-tasks.css";
 
 interface AddTaskModalProps {
@@ -9,8 +9,8 @@ interface AddTaskModalProps {
 }
 
 function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
-  const [user, setUser] = useState<string>('');
-  const [task, setTask] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
 
   if (!isOpen) return null;
@@ -19,15 +19,15 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
     e.preventDefault();
     try {
       const formattedDate = new Date(dueDate).toISOString();
-      await axios.post("http://localhost:3000/tasks", {
-        usuario: user,
-        tarefa: task,
-        dataEntrega: formattedDate
+      await api.post("http://localhost:3000/tasks", {
+        title: title,
+        status: status,
+        dueDate: formattedDate
       });
-      
+
       onSuccess();
-      setUser('');
-      setTask('');
+      setTitle('');
+      setStatus('');
       setDueDate('');
       onClose();
     } catch (error: any) {
@@ -44,30 +44,34 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
           <h2>Adicionar Tarefa</h2>
           <form className='modal-form' onSubmit={handleSubmit}>
             <div className='field-group'>
-              <label>Usuário</label>
-              <input 
-                type='text' 
-                value={user} 
-                onChange={(e) => setUser(e.target.value)} 
-                required 
+              <label>Tarefa</label>
+              <input
+                type='text'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
               />
             </div>
             <div className='field-group'>
-              <label>Tarefa</label>
-              <input 
-                type='text' 
-                value={task} 
-                onChange={(e) => setTask(e.target.value)} 
-                required 
-              />
+              <label>Status da Tarefa</label>
+              <select
+                className="status-select"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                required
+              >
+                <option value="pendente">Pendente</option>
+                <option value="em_progresso">Em Progresso</option>
+                <option value="concluida">Concluída</option>
+              </select>
             </div>
             <div className='field-group'>
               <label>Data de vencimento</label>
-              <input 
-                type='date' 
-                value={dueDate} 
-                onChange={(e) => setDueDate(e.target.value)} 
-                required 
+              <input
+                type='date'
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                required
               />
             </div>
             <div className='modal-actions'>

@@ -1,6 +1,15 @@
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
 export interface Task {
   id: number;
-  usuario: string;
-  tarefa: string;
-  dataEntrega: string;
+  title: string;
+  status: string;
+  dueDate: string;
+  user: {
+    name: string;
+  };
 }

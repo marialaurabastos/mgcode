@@ -15,13 +15,12 @@ export class Task {
     @Column()
     title: string;
 
-    @Column({ nullable: true })
-    description: string;
+    @Column({ type: 'timestamp', nullable: true })
+    dueDate: Date;
 
     @Column({
         type: 'enum',
         enum: TaskStatus,
-        default: TaskStatus.PENDENTE
     })
     status: TaskStatus;
 

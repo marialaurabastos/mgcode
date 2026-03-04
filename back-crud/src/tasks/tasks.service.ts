@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Task } from './entities/task.entity';
+import { Task, TaskStatus } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { User } from '../users/entities/user.entity';
@@ -25,7 +25,8 @@ export class TasksService {
 
     const newTask = this.taskRepository.create({
       title: createTaskDto.title,
-      description: createTaskDto.description,
+      status: createTaskDto.status as TaskStatus,
+      dueDate: new Date(createTaskDto.dueDate),
       user: user,
     });
 
@@ -40,8 +41,8 @@ export class TasksService {
     }
 
     if (updateTaskDto.title) task.title = updateTaskDto.title;
-    if (updateTaskDto.description) task.description = updateTaskDto.description;
-    if (updateTaskDto.status) task.status = updateTaskDto.status;
+    if (updateTaskDto.dueDate) task.dueDate = new Date(updateTaskDto.dueDate);
+    if (updateTaskDto.status) task.status = updateTaskDto.status as TaskStatus;
 
     return await this.taskRepository.save(task);
   }
@@ -68,6 +69,11 @@ export class TasksService {
 
   async remove(id: number) {
     const task = await this.findOne(id);
+
+    if (!task) {
+    throw new NotFoundException(`Tarefa com ID ${id} não encontrada`);
+  }
+
     return await this.taskRepository.remove(task);
   }
 }

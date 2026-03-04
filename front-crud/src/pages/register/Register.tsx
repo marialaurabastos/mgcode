@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from '../../services/api';
 import "./register.css";
 
 function Register() {
@@ -12,8 +12,8 @@ function Register() {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/users", {
-        username: name,
+      await api.post("http://localhost:3000/users", {
+        name: name,
         email: email,
         password: password,
         role: "common"

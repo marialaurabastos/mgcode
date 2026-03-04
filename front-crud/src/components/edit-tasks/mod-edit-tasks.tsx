@@ -1,40 +1,40 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import type { Task } from '../../types/task';
-import axios from 'axios';
+import api from '../../services/api'
 import "./mod-edit-tasks.css";
 
 
 interface EditTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  tarefa: Task | null;
+  task: Task | null;
   onSuccess: () => void;
 }
 
-function EditTaskModal({ isOpen, onClose, tarefa, onSuccess }: EditTaskModalProps) {
-  const [userName, setUserName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+function EditTaskModal({ isOpen, onClose, task, onSuccess }: EditTaskModalProps) {
+  const [title, setTitle] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
 
   useEffect(() => {
-    if (tarefa) {
-      setUserName(tarefa.usuario);
-      setDescription(tarefa.tarefa);
-      if (tarefa.dataEntrega) {
-        setDueDate(tarefa.dataEntrega.split('T')[0]);
+    if (task) {
+      setTitle(task.title);
+      setStatus(task.status);;
+      if (task.dueDate) {
+        setDueDate(task.dueDate.split('T')[0]);
       }
     }
-  }, [tarefa]);
+  }, [task]);
 
-  if (!isOpen || !tarefa) return null;
+  if (!isOpen || !task) return null;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3000/tarefa/${tarefa.id}`, {
-        nome: userName,
-        tarefa: description,
-        dataEntrega: new Date(dueDate).toISOString()
+      await api.put(`/tasks/${task.id}`, {
+        title: title,
+        status: status,
+        dueDate: new Date(dueDate).toISOString()
       });
       onSuccess();
       onClose();
@@ -52,30 +52,36 @@ function EditTaskModal({ isOpen, onClose, tarefa, onSuccess }: EditTaskModalProp
           <h2>Editar Tarefa</h2>
           <form className='modal-form' onSubmit={handleSubmit}>
             <div className='field-group'>
-              <label>Usuário</label>
-              <input 
-                type='text' 
-                value={userName} 
-                onChange={(e) => setUserName(e.target.value)} 
-                required 
+              <label>Tarefa</label>
+              <input
+                type='text'
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
               />
             </div>
             <div className='field-group'>
-              <label>Tarefa</label>
-              <input 
-                type='text' 
-                value={description} 
-                onChange={(e) => setDescription(e.target.value)} 
-                required 
-              />
+              <div className='field-group'>
+                <label>Status da Tarefa</label>
+                <select
+                  className="status-select"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  required
+                >
+                  <option value="pendente">Pendente</option>
+                  <option value="em_progresso">Em Progresso</option>
+                  <option value="concluida">Concluída</option>
+                </select>
+              </div>
             </div>
             <div className='field-group'>
               <label>Data de vencimento</label>
-              <input 
-                type='date' 
-                value={dueDate} 
-                onChange={(e) => setDueDate(e.target.value)} 
-                required 
+              <input
+                type='date'
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                required
               />
             </div>
             <div className='modal-actions'>

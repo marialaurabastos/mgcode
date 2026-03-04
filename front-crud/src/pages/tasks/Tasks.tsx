@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import api from '../../services/api';
 import type { Task } from '../../types/task';
-import axios from "axios";
 import "./tasks.css";
 import EditIcon from "../../assets/pencil.png";
 import DeleteIcon from "../../assets/bin.png";
@@ -17,10 +17,10 @@ function Tasks() {
 
   const loadTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/tarefa");
+      const response = await api.get("/tasks");
       setTasks(response.data);
     } catch (error) {
-      console.error("Error fetching tasks", error);
+      console.error("Erro! Provavelmente você não está logado.");
     }
   };
 
@@ -28,10 +28,14 @@ function Tasks() {
     loadTasks();
   }, []);
 
-  const filteredTasks = tasks.filter((task) =>
-    task.usuario.toLowerCase().includes(search.toLowerCase()) ||
-    task.tarefa.toLowerCase().includes(search.toLowerCase())
-  );
+
+  const filteredTasks = tasks.filter((task) => {
+    const userName = task.user?.name?.toLowerCase() || "";
+    const taskTitle = task.title?.toLowerCase() || "";
+    const searchTerm = search.toLowerCase();
+
+    return userName.includes(searchTerm) || taskTitle.includes(searchTerm);
+  });
 
   const openAddModal = () => setOpenModal('add');
   const openDeleteModal = (task: Task) => {
@@ -56,92 +60,98 @@ function Tasks() {
   return (
     <div className="tasks-container">
       <Layout>
-      <div className="tasks-page">
-        <h1>Tarefas</h1>
-        <div className="tasks-header">
-          <div className="tasks-search-wrapper">
-            <input 
-              type="text" 
-              placeholder="Pesquisar tarefa ou usuário..." 
-              value={search} 
-              onChange={(e) => setSearch(e.target.value)} 
-              className="search-input"
-            />
-            <div className="action-buttons">
-              <div className="clear-button-wrapper">
-                <button onClick={() => setSearch("")}>Limpar</button>
-              </div>
-              <div className="add-button-wrapper">
-                <button onClick={openAddModal}>Adicionar</button>
+        <div className="tasks-page">
+          <h1>Tarefas</h1>
+          <div className="tasks-header">
+            <div className="tasks-search-wrapper">
+              <input
+                type="text"
+                placeholder="Pesquisar tarefa ou usuário..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="search-input"
+              />
+              <div className="action-buttons">
+                <div className="clear-button-wrapper">
+                  <button onClick={() => setSearch("")}>Limpar</button>
+                </div>
+                <div className="add-button-wrapper">
+                  <button onClick={openAddModal}>Adicionar</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="table-container">
-          <table className="tasks-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Usuário</th>
-                <th>Tarefa</th>
-                <th>Vencimento</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {search === "" && tasks.length === 0 ? (
-                <tr></tr>
-              ) : (
-                <>
-                  {search !== "" && filteredTasks.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} style={{ textAlign: 'center' }}>
-                        Nenhuma tarefa encontrada para "{search}".
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredTasks.map((task) => (
-                      <tr key={task.id}>
-                        <td>{task.id}</td>
-                        <td>{task.usuario}</td>
-                        <td>{task.tarefa}</td>
-                        <td>{formatDate(task.dataEntrega)}</td>
-                        <td className="actions-column">
-                          <button className="edit-button" onClick={() => openEditModal(task)}>
-                            <img className="edit-icon" src={EditIcon} alt="Editar" />
-                          </button>
-                          <button className="delete-button" onClick={() => openDeleteModal(task)}>
-                            <img className="delete-icon" src={DeleteIcon} alt="Excluir" />
-                          </button>
+          <div className="table-container">
+            <table className="tasks-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Usuário</th>
+                  <th>Tarefa</th>
+                  <th>Status</th>
+                  <th>Vencimento</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {search === "" && tasks.length === 0 ? (
+                  <tr></tr>
+                ) : (
+                  <>
+                    {search !== "" && filteredTasks.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center' }}>
+                          Nenhuma tarefa encontrada para "{search}".
                         </td>
                       </tr>
-                    ))
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
+                    ) : (
+                      filteredTasks.map((task) => (
+                        <tr key={task.id}>
+                          <td>{task.id}</td>
+                          <td>{task.user?.name}</td>
+                          <td>{task.title}</td>
+                          <td>
+                            <span className={`status-badge ${task.status}`}>
+                              {task.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td>{formatDate(task.dueDate)}</td>
+                          <td className="actions-column">
+                            <button className="edit-button" onClick={() => openEditModal(task)}>
+                              <img className="edit-icon" src={EditIcon} alt="Editar" />
+                            </button>
+                            <button className="delete-button" onClick={() => openDeleteModal(task)}>
+                              <img className="delete-icon" src={DeleteIcon} alt="Excluir" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      <AddTaskModal isOpen={openModal === 'add'} onClose={closeModals} onSuccess={loadTasks} />
-      <EditTaskModal isOpen={openModal === 'edit'} onClose={closeModals} tarefa={selectedTask} onSuccess={loadTasks} />
-      <DeleteModal
-        isOpen={openModal === 'delete'}
-        onClose={closeModals}
-        onConfirm={async () => {
-          try {
-            if (selectedTask) {
-              await axios.delete(`http://localhost:3000/tarefa/${selectedTask.id}`);
-              loadTasks();
-              closeModals();
+        <AddTaskModal isOpen={openModal === 'add'} onClose={closeModals} onSuccess={loadTasks} />
+        <EditTaskModal isOpen={openModal === 'edit'} onClose={closeModals} task={selectedTask} onSuccess={loadTasks} />
+        <DeleteModal
+          isOpen={openModal === 'delete'}
+          onClose={closeModals}
+          onConfirm={async () => {
+            try {
+              if (selectedTask) {
+                await api.delete(`/tasks/${selectedTask.id}`);
+                loadTasks();
+                closeModals();
+              }
+            } catch (error) {
+              console.error("Erro ao deletar tarefa:", error);
             }
-          } catch (error) {
-            console.error("Delete error:", error);
-          }
-        }}
-      />
+          }}
+        />
       </Layout>
     </div>
   );
