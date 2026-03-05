@@ -16,11 +16,11 @@ export class TasksService {
     private readonly userRepository: Repository<User>,
   ) { }
 
-  async create(createTaskDto: CreateTaskDto, userId: number) {
-    const user = await this.userRepository.findOneBy({ id: userId });
+  async create(createTaskDto: CreateTaskDto) {
+    const user = await this.userRepository.findOneBy({ id: createTaskDto.userId });
 
     if (!user) {
-      throw new NotFoundException(`Usuário com ID ${userId} não encontrado`);
+      throw new NotFoundException(`Usuário com ID ${createTaskDto.userId} não encontrado`);
     }
 
     const newTask = this.taskRepository.create({
@@ -47,17 +47,16 @@ export class TasksService {
     return await this.taskRepository.save(task);
   }
 
-  async findAll(userId: number) {
+  async findAll() {
     return await this.taskRepository.find({
-      where: { user: { id: userId } },
       relations: ['user']
     });
   }
 
   async findOne(id: number) {
     const task = await this.taskRepository.findOne({
-      where: { id: id },
-      relations: ['user']
+      where: { id },
+      relations: ['user'],
     });
 
     if (!task) {

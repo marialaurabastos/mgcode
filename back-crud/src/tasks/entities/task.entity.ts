@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm'
 import { User } from '../../users/entities/user.entity'
 
 export enum TaskStatus {
@@ -27,6 +27,10 @@ export class Task {
     @CreateDateColumn()
     createdAt: Date;
 
+    @Column()
+    userId: number;
+
     @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'userId' })
     user: User;
 }

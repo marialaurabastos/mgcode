@@ -13,15 +13,13 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto, @Req() req: any) {
-    const userId = req.user.userId;
-    return this.tasksService.create(createTaskDto, userId);
+  create(@Body() createTaskDto: CreateTaskDto) {
+    return this.tasksService.create(createTaskDto);
   }
 
   @Get()
-  findAll(@Req() req: any) {
-    const userId = req.user.userId;
-    return this.tasksService.findAll(userId);
+  findAll() {
+    return this.tasksService.findAll();
   }
 
   @Get(':id')

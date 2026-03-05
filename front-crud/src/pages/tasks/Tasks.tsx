@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import type { Task } from '../../types/task'
 import { useNavigate } from "react-router-dom";
 import api from '../../services/api';
 import "./tasks.css";
@@ -9,14 +10,6 @@ import AddTaskModal from "../../components/add-tasks/mod-add-tasks";
 import EditTaskModal from "../../components/edit-tasks/mod-edit-tasks";
 import DeleteModal from "../../components/delete/mod-delete";
 
-
-export interface Task {
-  id: number;
-  name: string
-  title: string;
-  status: string;
-  dueDate: string; 
-}
 
 function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -52,7 +45,7 @@ function Tasks() {
   };
 
   const filteredTasks = tasks.filter((task) => {
-    const userName = task.name?.toLowerCase() || "";
+    const userName = task.user?.name.toLowerCase() || "";
     const taskTitle = task.title?.toLowerCase() || "";
     const searchTerm = search.toLowerCase();
 
@@ -133,7 +126,7 @@ function Tasks() {
                   <>
                     {search !== "" && filteredTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={6} style={{ textAlign: 'center' }}>
+                        <td colSpan={6}>
                           Nenhuma tarefa encontrada para "{search}".
                         </td>
                       </tr>
@@ -141,7 +134,7 @@ function Tasks() {
                       filteredTasks.map((task) => (
                         <tr key={task.id}>
                           <td>{task.id}</td>
-                          <td>{task.name || "Sem usuário" }</td>
+                          <td>{task.user?.name || 'aqui vai o nome'}</td>
                           <td>{task.title}</td>
                           <td>
                             <span className={`status-badge ${task.status}`}>

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import api from '../../services/api';
 import "./mod-add-tasks.css";
 
@@ -8,33 +8,56 @@ interface AddTaskModalProps {
   onSuccess: () => void;
 }
 
+interface User {
+  id: number;
+  name: string;
+}
+
 function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
+  const [users, setUsers] = useState<User[]>([]);
+  const [name, setName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [status, setStatus] = useState<string>('pendente');
   const [dueDate, setDueDate] = useState<string>('');
+
+  useEffect(() => {
+    if (isOpen) {
+      const fetchUsers = async () => {
+        try {
+          const response = await api.get('/user');
+          setUsers(response.data);
+        } catch (error) {
+          console.error("Erro ao carregar usuários:", error);
+        }
+      };
+      fetchUsers();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const storedUserId = localStorage.getItem("@App:userId");
-      console.log('storedUserId', storedUserId);
-      const userId = Number(storedUserId);
-      const statusEnvio = status || 'pendente';
+      if (!name) {
+        alert("Escolha um responsável pela tarefa.");
+        return;
+      }
+
       const formattedDate = new Date(dueDate).toISOString();
+
       await api.post("/tasks", {
         title: title,
-        status: statusEnvio,
+        status: status || 'pendente',
         dueDate: formattedDate,
-        userId: userId
+        userId: Number(name)
       });
 
       onSuccess();
-      setTitle('');
-      setStatus('pendente');
-      setDueDate('');
       onClose();
+
+      alert('Tarefa criada com sucesso!');
+
     } catch (error: any) {
       console.error("Error saving task:", error);
       alert(error.response?.data?.message || "Erro ao salvar tarefa no banco!");
@@ -49,6 +72,22 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
           <h2>Adicionar Tarefa</h2>
           <form className='modal-form' onSubmit={handleSubmit}>
             <div className='field-group'>
+              <div className='field-group'>
+                <label>Usuário Responsável</label>
+                <select
+                  className="name-select"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                >
+                  <option value="">Selecione um usuário</option>
+                  {users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <label>Tarefa</label>
               <input
                 type='text'

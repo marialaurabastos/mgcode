@@ -8,6 +8,8 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
+
+  //função para pegar o token do back
   function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -32,12 +34,9 @@ function Login() {
       if (response.data && response.data.access_token) {
         localStorage.setItem("@App:token", response.data.access_token);
         const dados = parseJwt(response.data.access_token);
-
-        console.log('dadosmtd', dados)
-
         const user = dados.email;
         console.log('response.data', response.data);
-        const userName = user?.name || "Usuário";
+        const userName = user.name || "Usuário";
         const userId = dados.sub || null;
         console.log('userId', userId);
 
@@ -47,7 +46,7 @@ function Login() {
           localStorage.setItem("@App:userId", String(userId));
         }
 
-        alert(`Bem-vindo(a), ${userName}!`);
+        alert(`Bem-vindo(a)!`);
 
         navigate('/tasks');
       } else {
