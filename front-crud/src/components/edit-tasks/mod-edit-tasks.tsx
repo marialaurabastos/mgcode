@@ -39,7 +39,7 @@ function EditTaskModal({ isOpen, onClose, task, onSuccess }: EditTaskModalProps)
       onSuccess();
       onClose();
     } catch (error: any) {
-      console.error("Error updating task:", error);
+      console.error("Error ao atualizar:", error);
       alert("Erro ao atualizar tarefa!");
     }
   };

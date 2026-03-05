@@ -10,7 +10,7 @@ interface AddTaskModalProps {
 
 function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
   const [title, setTitle] = useState<string>('');
-  const [status, setStatus] = useState<string>('');
+  const [status, setStatus] = useState<string>('pendente');
   const [dueDate, setDueDate] = useState<string>('');
 
   if (!isOpen) return null;
@@ -18,11 +18,15 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      const storedUserId = localStorage.getItem("@App:userId");
+      const userId = Number(storedUserId);
+      const statusEnvio = status || 'pendente';
       const formattedDate = new Date(dueDate).toISOString();
-      await api.post("http://localhost:3000/tasks", {
+      await api.post("/tasks", {
         title: title,
-        status: status,
-        dueDate: formattedDate
+        status: statusEnvio,
+        dueDate: formattedDate,
+        userId: userId
       });
 
       onSuccess();
@@ -32,7 +36,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
       onClose();
     } catch (error: any) {
       console.error("Error saving task:", error);
-      alert("Erro ao salvar tarefa no banco!");
+      alert(error.response?.data?.message || "Erro ao salvar tarefa no banco!");
     }
   };
 

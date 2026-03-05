@@ -10,7 +10,7 @@ interface AddUserModalProps {
 
 function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     role: '',
     password: ''
@@ -26,15 +26,15 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('/usuarios', {
-        usuario: formData.username,
+      await api.post('/user', {
+        name: formData.name,
         email: formData.email,
-        perfil: formData.role,
-        senha: formData.password
+        role: formData.role,
+        password: formData.password
       });
 
       alert("Usuário cadastrado com sucesso!");
-      setFormData({ username: '', email: '', role: '', password: '' });
+      setFormData({ name: '', email: '', role: '', password: '' });
       onUserAdded();
       onClose();
     } catch (error) {
@@ -52,12 +52,12 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
           <h2>Adicionar Usuário</h2>
           <form className="modal-form" onSubmit={handleSubmit}>
             <div className="field-group">
-              <label htmlFor="username">Usuário</label>
+              <label htmlFor="name">Usuário</label>
               <input
                 type="text"
-                id="username"
-                name="username"
-                value={formData.username}
+                id="name"
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 required
               />

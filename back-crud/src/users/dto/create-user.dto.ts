@@ -14,4 +14,8 @@ export class CreateUserDto {
     @MinLength(6, { message: 'A senha deve ter no mínimo 6 caracteres' })
     password: string;
 
+    @IsString({ message: 'Selecione um perfil válido' })
+    @IsNotEmpty({ message: 'O campo perfil não pode estar vazio' })
+    role: string;
+
 }

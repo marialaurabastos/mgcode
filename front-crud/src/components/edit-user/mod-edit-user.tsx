@@ -2,38 +2,38 @@ import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
 import api from "../../services/api";
 import "./mod-edit-user.css";
 
-interface User {
+export interface UserData {
   id: number;
-  usuario: string;
+  name: string;
   email: string;
-  perfil: string;
+  role: string;
 }
 
 interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  usuario: User | null;
+  name: UserData | null;
   onUserUpdate: () => void;
 }
 
-function EditUserModal({ isOpen, onClose, usuario, onUserUpdate }: EditUserModalProps) {
+function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalProps) {
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     role: ''
   });
 
   useEffect(() => {
-    if (usuario) {
+    if (name) {
       setFormData({
-        username: usuario.usuario,
-        email: usuario.email,
-        role: usuario.perfil
+        name: name.name,
+        email: name.email,
+        role: name.role
       });
     }
-  }, [usuario]);
+  }, [name]);
 
-  if (!isOpen || !usuario) return null;
+  if (!isOpen || !name) return null;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -43,16 +43,16 @@ function EditUserModal({ isOpen, onClose, usuario, onUserUpdate }: EditUserModal
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await api.put(`/usuarios/${usuario.id}`, {
-        usuario: formData.username,
+      await api.put(`/user/${name.id}`, {
+        name: formData.name,
         email: formData.email,
-        perfil: formData.role
+        role: formData.role
       }); 
       alert("Usuário atualizado com sucesso!");
       onUserUpdate();
       onClose();
     } catch (error) {
-      console.error("Error editing user:", error);
+      console.error("Erro ao atualizar usuário:", error);
       alert("Erro ao atualizar usuário.");
     }
   };
@@ -67,8 +67,8 @@ function EditUserModal({ isOpen, onClose, usuario, onUserUpdate }: EditUserModal
             <div className='field-group'>
               <label>Usuário</label>
               <input 
-                name='username' 
-                value={formData.username} 
+                name='name' 
+                value={formData.name} 
                 onChange={handleChange} 
                 required 
               />

@@ -12,11 +12,11 @@ function Register() {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await api.post("http://localhost:3000/users", {
+      await api.post("http://localhost:3000/user", {
         name: name,
         email: email,
-        password: password,
-        role: "common"
+        role: "common",
+        password: password
       });
 
       alert("Cadastro realizado com sucesso!");

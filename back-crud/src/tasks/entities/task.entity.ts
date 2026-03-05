@@ -2,9 +2,9 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne } f
 import { User } from '../../users/entities/user.entity'
 
 export enum TaskStatus {
-    PENDENTE = 'pendente',
-    EM_PROGRESSO = 'em_progresso',
-    CONCLUIDA = 'concluida',
+    pendente = 'pendente',
+    em_progresso = 'em_progresso',
+    concluida = 'concluida',
 }
 
 @Entity('tasks')

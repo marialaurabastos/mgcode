@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Put, Param, Delete, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -29,7 +29,7 @@ export class TasksController {
     return this.tasksService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.update(+id, updateTaskDto);
   }

@@ -10,12 +10,6 @@ function Sidebar() {
 
       <div className="sidebar-links-container">
         <nav className="navbar-links">
-          <NavLink 
-            to="/login" 
-            className={({ isActive }) => isActive ? 'active-link' : 'nav-link'}
-          >
-            Login
-          </NavLink>
 
           <NavLink 
             to="/user" 

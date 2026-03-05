@@ -12,6 +12,9 @@ export class User {
     @Column({ unique: true })
     email: string;
 
+    @Column({name: 'role', default: 'comum'})
+    role: string;
+
     @Column({ select: false })
     password?: string;
 

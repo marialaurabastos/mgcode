@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from '../../services/api';
-import type { Task } from '../../types/task';
 import "./tasks.css";
 import EditIcon from "../../assets/pencil.png";
 import DeleteIcon from "../../assets/bin.png";
@@ -9,11 +9,31 @@ import AddTaskModal from "../../components/add-tasks/mod-add-tasks";
 import EditTaskModal from "../../components/edit-tasks/mod-edit-tasks";
 import DeleteModal from "../../components/delete/mod-delete";
 
+
+export interface Task {
+  id: number;
+  title: string;
+  status: string;
+  dueDate: string;
+  user?: { name: string }; 
+}
+
 function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [search, setSearch] = useState<string>("");
   const [openModal, setOpenModal] = useState<'add' | 'edit' | 'delete' | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("@App:token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    loadTasks();
+  }, [navigate]);
 
   const loadTasks = async () => {
     try {
@@ -23,11 +43,6 @@ function Tasks() {
       console.error("Erro! Provavelmente você não está logado.");
     }
   };
-
-  useEffect(() => {
-    loadTasks();
-  }, []);
-
 
   const filteredTasks = tasks.filter((task) => {
     const userName = task.user?.name?.toLowerCase() || "";
@@ -55,6 +70,12 @@ function Tasks() {
     if (!isoDate) return "";
     const date = new Date(isoDate);
     return date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+  };
+
+  const statusLabels: Record<string, string> = {
+    pendente: "Pendente",
+    em_progresso: "Em Progresso",
+    concluida: "Concluída"
   };
 
   return (
@@ -109,11 +130,11 @@ function Tasks() {
                       filteredTasks.map((task) => (
                         <tr key={task.id}>
                           <td>{task.id}</td>
-                          <td>{task.user?.name}</td>
+                          <td>{task.user?.name || "Sem usuário"}</td>
                           <td>{task.title}</td>
                           <td>
                             <span className={`status-badge ${task.status}`}>
-                              {task.status.toUpperCase()}
+                              {statusLabels[task.status] || task.status}
                             </span>
                           </td>
                           <td>{formatDate(task.dueDate)}</td>

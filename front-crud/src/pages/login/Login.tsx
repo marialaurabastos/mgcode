@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import "./login.css";''
+import "./login.css"; ''
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -14,11 +14,18 @@ function Login() {
       const response = await api.post('/auth/login', { email, password });
 
       if (response.data && response.data.access_token) {
-        localStorage.setItem("token", response.data.access_token);
+        localStorage.setItem("@App:token", response.data.access_token);
 
-        const userName = response.data.user?.name || "Usuário";
-        localStorage.setItem("loggedUser", userName);
-        
+        const user = response.data.user;
+        const userName = user?.name || "Usuário";
+        const userId = user?.id || null;
+
+        localStorage.setItem("@App:user", userName);
+
+        if (userId) {
+          localStorage.setItem("@App:userId", String(userId));
+        }
+
         alert(`Bem-vindo(a), ${userName}!`);
 
         navigate('/tasks');
