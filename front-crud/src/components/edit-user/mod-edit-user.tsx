@@ -85,7 +85,7 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
             <div className='field-group'>
               <label>Perfil</label>
               <select name="role" value={formData.role} onChange={handleChange} required>
-                <option value="admin">Administrador</option>
+                <option value="administrador">Administrador</option>
                 <option value="usuario">Usuário</option>
                 <option value="comum">Comum</option>
               </select>

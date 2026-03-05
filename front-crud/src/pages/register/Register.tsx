@@ -15,7 +15,7 @@ function Register() {
       await api.post("http://localhost:3000/user", {
         name: name,
         email: email,
-        role: "common",
+        role: '',
         password: password
       });
 

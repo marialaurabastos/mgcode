@@ -85,7 +85,7 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
                 required
               >
                 <option value="">Selecione</option>
-                <option value="admin">Administrador</option>
+                <option value="administrador">Administrador</option>
                 <option value="usuario">Usuário</option>
                 <option value="comum">Comum</option>
               </select>
