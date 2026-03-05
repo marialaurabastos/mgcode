@@ -12,10 +12,10 @@ import DeleteModal from "../../components/delete/mod-delete";
 
 export interface Task {
   id: number;
+  name: string
   title: string;
   status: string;
-  dueDate: string;
-  user?: { name: string }; 
+  dueDate: string; 
 }
 
 function Tasks() {
@@ -25,6 +25,13 @@ function Tasks() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("@App:token");
+    localStorage.removeItem("@App:user");
+    localStorage.clear();
+    navigate("/login");
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("@App:token");
@@ -45,7 +52,7 @@ function Tasks() {
   };
 
   const filteredTasks = tasks.filter((task) => {
-    const userName = task.user?.name?.toLowerCase() || "";
+    const userName = task.name?.toLowerCase() || "";
     const taskTitle = task.title?.toLowerCase() || "";
     const searchTerm = search.toLowerCase();
 
@@ -99,6 +106,10 @@ function Tasks() {
                 <div className="add-button-wrapper">
                   <button onClick={openAddModal}>Adicionar</button>
                 </div>
+
+                <div className='logout-button-wrapper'>
+                  <button onClick={handleLogout}>Sair</button>
+                </div>
               </div>
             </div>
           </div>
@@ -130,7 +141,7 @@ function Tasks() {
                       filteredTasks.map((task) => (
                         <tr key={task.id}>
                           <td>{task.id}</td>
-                          <td>{task.user?.name || "Sem usuário"}</td>
+                          <td>{task.name || "Sem usuário" }</td>
                           <td>{task.title}</td>
                           <td>
                             <span className={`status-badge ${task.status}`}>

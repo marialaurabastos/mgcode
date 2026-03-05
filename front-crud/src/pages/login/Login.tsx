@@ -8,6 +8,22 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
+  function parseJwt(token: string) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+
+    return JSON.parse(jsonPayload);
+  }
+
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -15,10 +31,15 @@ function Login() {
 
       if (response.data && response.data.access_token) {
         localStorage.setItem("@App:token", response.data.access_token);
+        const dados = parseJwt(response.data.access_token);
 
-        const user = response.data.user;
+        console.log('dadosmtd', dados)
+
+        const user = dados.email;
+        console.log('response.data', response.data);
         const userName = user?.name || "Usuário";
-        const userId = user?.id || null;
+        const userId = dados.sub || null;
+        console.log('userId', userId);
 
         localStorage.setItem("@App:user", userName);
 

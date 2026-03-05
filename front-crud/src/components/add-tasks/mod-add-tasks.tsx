@@ -19,6 +19,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
     e.preventDefault();
     try {
       const storedUserId = localStorage.getItem("@App:userId");
+      console.log('storedUserId', storedUserId);
       const userId = Number(storedUserId);
       const statusEnvio = status || 'pendente';
       const formattedDate = new Date(dueDate).toISOString();
@@ -31,7 +32,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
 
       onSuccess();
       setTitle('');
-      setStatus('');
+      setStatus('pendente');
       setDueDate('');
       onClose();
     } catch (error: any) {

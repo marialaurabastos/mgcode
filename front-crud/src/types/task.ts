@@ -9,5 +9,5 @@ export interface Task {
   title: string;
   status: string;
   dueDate: string;
-  user?: { name: string; }
+  name: string 
 }
