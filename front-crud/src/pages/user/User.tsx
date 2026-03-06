@@ -151,9 +151,17 @@ function User() {
           onConfirm={async () => {
             try {
               if (selectedUser) {
+
                 await api.delete(`/user/${selectedUser.id}`);
-                loadUsers();
-                closeModals();
+
+                const loggedUser = localStorage.getItem("@App:userId");
+
+                if (selectedUser.id.toString() === loggedUser) {
+                  handleLogout();
+                } else {
+                  loadUsers();
+                  closeModals();
+                }
               }
             } catch (error) {
               alert("Erro ao excluir usuário");
