@@ -44,6 +44,18 @@ body {
     opacity: 0.5;
 }
 
+.register-page .register-form select {
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 320px;
+    height: 35px;
+    color: #000000;
+    background-color: #ffffff;
+    opacity: 0.5;
+}
+
 .register-page .register-form button {
     min-width: 320px;
     height: 35px !important;

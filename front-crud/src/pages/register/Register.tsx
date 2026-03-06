@@ -6,6 +6,7 @@ import "./register.css";
 function Register() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [role, setRole] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function Register() {
       await api.post("http://localhost:3000/user", {
         name: name,
         email: email,
+        role: role,
         password: password
       });
 
@@ -49,6 +51,18 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <select
+            name="role"
+            id="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+          >
+            <option value="">Selecione</option>
+            <option value="administrador">Administrador</option>
+            <option value="usuario">Usuário</option>
+            <option value="comum">Comum</option>
+          </select>
           <input
             type="password"
             placeholder="Senha"
@@ -58,6 +72,7 @@ function Register() {
           />
           <button type="submit">CADASTRAR</button>
         </form>
+
         <div className="login-link-container">
           <p>Já tem uma conta?</p>
           <div className="login-button-wrapper">

@@ -127,7 +127,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
               >
                 <option value="">Selecione</option>
                 <option value="pendente">Pendente</option>
-                <option value="em_progresso">Em Progresso</option>
+                <option value="em progresso">Em Progresso</option>
                 <option value="concluida">Concluída</option>
               </select>
             </div>

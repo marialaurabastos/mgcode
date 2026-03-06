@@ -134,7 +134,7 @@ function Tasks() {
                       filteredTasks.map((task) => (
                         <tr key={task.id}>
                           <td>{task.id}</td>
-                          <td>{task.user?.name || 'aqui vai o nome'}</td>
+                          <td>{task.user?.name || ''}</td>
                           <td>{task.title}</td>
                           <td>
                             <span className={`status-badge ${task.status}`}>

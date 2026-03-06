@@ -43,7 +43,7 @@ function EditTaskModal({ isOpen, onClose, task, onSuccess }: EditTaskModalProps)
       alert("Erro ao atualizar tarefa!");
     }
   };
-  
+
   return (
     <div className='modal-overlay' onClick={onClose}>
       <div className='modal-container' onClick={(e) => e.stopPropagation()}>
