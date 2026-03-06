@@ -18,7 +18,7 @@ function ModExcluir({ isOpen, onClose, onConfirm }: ModExcluirProps) {
             X
           </button>
 
-          <h2>Excluir</h2>
+          <h2>Deletar</h2>
           <p>Essa ação não poderá ser desfeita.</p>
 
           <div className='delete-actions-wrapper'>

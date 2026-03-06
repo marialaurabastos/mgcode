@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, type SyntheticEvent } from 'react';
 import type { Task } from '../../types/task';
 import api from '../../services/api'
 import "./mod-edit-tasks.css";
@@ -28,7 +28,7 @@ function EditTaskModal({ isOpen, onClose, task, onSuccess }: EditTaskModalProps)
 
   if (!isOpen || !task) return null;
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
       await api.put(`/tasks/${task.id}`, {

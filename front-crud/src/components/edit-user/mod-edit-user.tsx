@@ -1,4 +1,4 @@
-import { useState, useEffect, type ChangeEvent, type FormEvent } from "react";
+import { useState, useEffect, type ChangeEvent, type SyntheticEvent } from "react";
 import api from "../../services/api";
 import "./mod-edit-user.css";
 
@@ -40,7 +40,7 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
       await api.put(`/user/${name.id}`, {

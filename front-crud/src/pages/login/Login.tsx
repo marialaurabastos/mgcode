@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import "./login.css"; ''
@@ -8,8 +8,7 @@ function Login() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
-
-  //função para pegar o token do back
+  //função para pegar reconhecer user logado
   function parseJwt(token: string) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -22,24 +21,21 @@ function Login() {
         })
         .join('')
     );
-
+    
     return JSON.parse(jsonPayload);
   }
 
-  const handleLogin = async (e: FormEvent) => {
+  const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
       const response = await api.post('/auth/login', { email, password });
 
       if (response.data && response.data.access_token) {
-        localStorage.setItem("@App:token", response.data.access_token);
-        const dados = parseJwt(response.data.access_token);
-        const user = dados.email;
-        console.log('response.data', response.data);
-        const userName = user.name || "Usuário";
-        const userId = dados.sub || null;
-        console.log('userId', userId);
-
+        const token = response.data.access_token;
+        localStorage.setItem("@App:token", token);
+        const dados = parseJwt(token)
+        const userId = dados.sub;
+        const userName = dados.name || "Usuário";
         localStorage.setItem("@App:user", userName);
 
         if (userId) {
@@ -55,9 +51,8 @@ function Login() {
 
     } catch (error: any) {
       console.error("Login error", error);
-      const message = error.response?.data?.message || "Erro ao conectar com o servidor";
-      alert(message);
-    }
+      alert("Email ou senha incorretos");
+      }
   };
 
   return (
@@ -65,6 +60,7 @@ function Login() {
       <div className="login-form-container">
         <h1>Login</h1>
         <form className="login-form" onSubmit={handleLogin}>
+          <label>Email*</label>
           <input
             type="email"
             placeholder="Email"
@@ -72,7 +68,7 @@ function Login() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
+          <label>Senha*</label>
           <input
             type="password"
             placeholder="Senha"

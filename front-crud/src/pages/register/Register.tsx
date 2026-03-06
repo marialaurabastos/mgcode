@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import api from '../../services/api';
 import "./register.css";
@@ -10,7 +10,7 @@ function Register() {
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleRegister = async (e: FormEvent) => {
+  const handleRegister = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (password.length < 6) {
       alert("A senha precisa ter no mínimo 6 caracteres")
@@ -37,6 +37,7 @@ function Register() {
       <div className="register-form-container">
         <h1>Cadastro</h1>
         <form className="register-form" onSubmit={handleRegister}>
+          <label>Nome *</label>
           <input
             type="text"
             placeholder="Nome"
@@ -44,6 +45,7 @@ function Register() {
             onChange={(e) => setName(e.target.value)}
             required
           />
+          <label>Email*</label>
           <input
             type="email"
             placeholder="Email"
@@ -51,6 +53,7 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <label>Tipo do perfil *</label>
           <select
             name="role"
             id="role"
@@ -63,6 +66,7 @@ function Register() {
             <option value="usuario">Usuário</option>
             <option value="comum">Comum</option>
           </select>
+          <label>Senha*</label>
           <input
             type="password"
             placeholder="Senha"

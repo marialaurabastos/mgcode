@@ -12,12 +12,10 @@ export class AuthService {
 
     async validateUser( email: string, pass: string ): Promise<{ id: number; name: string; email: string }> {
         const user = await this.usersService.findOneByEmail(email);
-        
 
         if (!user || !user.password) {
             throw new UnauthorizedException('E-mail ou senha incorretos');
         }
-
         const passwordIsValid = await bcrypt.compare(pass, user.password);
 
         if (!passwordIsValid) {
@@ -29,7 +27,6 @@ export class AuthService {
             name: user.name,
             email: user.email
         };
-
     }
     async login(user: { id: number; name: string; email: string }) {
         const payload = {
