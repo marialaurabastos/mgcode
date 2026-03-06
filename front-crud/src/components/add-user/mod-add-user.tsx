@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, type ChangeEvent, type SyntheticEvent } from 'react';
 import api from '../../services/api';
 import './mod-add-user.css';
 
@@ -16,6 +16,21 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
     password: ''
   });
 
+  const clearFields = () => {
+    setFormData({
+      name: '',
+      email: '',
+      role: '',
+      password: ''
+    });
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      clearFields();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -23,7 +38,7 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
       await api.post('/user', {

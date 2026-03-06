@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, type SyntheticEvent } from 'react';
 import api from '../../services/api';
 import "./mod-add-tasks.css";
 
@@ -42,7 +42,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
       if (!name) {
@@ -76,7 +76,6 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
     }
   };
 
-
   function clearFields() {
     setUsers([]);
     setName('');
@@ -85,7 +84,6 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
     setDueDate('');
 
   }
-
 
   return (
     <div className="modal-overlay" onClick={onClose}>
