@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import Sidebar from '../components/sidebar/Sidebar';
+import type { ReactNode } from 'react';
+import Sidebar from '../components/sidebar/sidebar';
 import './layout.css';
 
 interface LayoutProps {
