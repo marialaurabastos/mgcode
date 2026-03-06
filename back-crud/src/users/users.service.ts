@@ -14,12 +14,14 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDto) {
+    console.log('role', createUserDto.role);
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
 
     const newUser = this.userRepository.create({
       name: createUserDto.name,
       email: createUserDto.email,
+      role: createUserDto.role,
       password: hashedPassword,
       isActive: true,
     });

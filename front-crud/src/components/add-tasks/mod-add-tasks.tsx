@@ -17,7 +17,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
   const [users, setUsers] = useState<User[]>([]);
   const [name, setName] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-  const [status, setStatus] = useState<string>('pendente');
+  const [status, setStatus] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
 
   useEffect(() => {
@@ -34,6 +34,12 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      clearFields()
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: FormEvent) => {
@@ -41,6 +47,11 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
     try {
       if (!name) {
         alert("Escolha um responsável pela tarefa.");
+        return;
+      }
+
+      if (!status) {
+        alert("Escolha um status para a tarefa.");
         return;
       }
 
@@ -55,6 +66,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
 
       onSuccess();
       onClose();
+      clearFields();
 
       alert('Tarefa criada com sucesso!');
 
@@ -63,6 +75,17 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
       alert(error.response?.data?.message || "Erro ao salvar tarefa no banco!");
     }
   };
+
+
+  function clearFields() {
+    setUsers([]);
+    setName('');
+    setTitle('');
+    setStatus('');
+    setDueDate('');
+
+  }
+
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -104,6 +127,7 @@ function AddTaskModal({ isOpen, onClose, onSuccess }: AddTaskModalProps) {
                 onChange={(e) => setStatus(e.target.value)}
                 required
               >
+                <option value="">Selecione</option>
                 <option value="pendente">Pendente</option>
                 <option value="em_progresso">Em Progresso</option>
                 <option value="concluida">Concluída</option>

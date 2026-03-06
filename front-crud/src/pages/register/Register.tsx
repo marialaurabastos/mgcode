@@ -11,11 +11,14 @@ function Register() {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
+    if (password.length < 6) {
+      alert("A senha precisa ter no mínimo 6 caracteres")
+      return;
+    }
     try {
       await api.post("http://localhost:3000/user", {
         name: name,
         email: email,
-        role: '',
         password: password
       });
 

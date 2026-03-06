@@ -12,7 +12,7 @@ export class User {
     @Column({ unique: true })
     email: string;
 
-    @Column({name: 'role', default: 'comum'})
+    @Column({name: 'role', default: ''})
     role: string;
 
     @Column({ select: false })
