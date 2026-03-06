@@ -1,29 +1,21 @@
 import { useState, type SyntheticEvent } from "react";
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 import api from '../../services/api';
-import "./login.css"; ''
+import "./login.css";
+
+interface JwtResponse {
+  email: string
+  name: string
+  exp: number
+  iat: number
+  sub: number
+}
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-
-  //função para pegar reconhecer user logado
-  function parseJwt(token: string) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(
-      window
-        .atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-    );
-    
-    return JSON.parse(jsonPayload);
-  }
 
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -33,7 +25,8 @@ function Login() {
       if (response.data && response.data.access_token) {
         const token = response.data.access_token;
         localStorage.setItem("@App:token", token);
-        const dados = parseJwt(token)
+        const dados = jwtDecode<JwtResponse >(token)
+        console.log('dados', dados)
         const userId = dados.sub;
         const userName = dados.name || "Usuário";
         localStorage.setItem("@App:user", userName);
@@ -52,7 +45,7 @@ function Login() {
     } catch (error: any) {
       console.error("Login error", error);
       alert("Email ou senha incorretos");
-      }
+    }
   };
 
   return (
