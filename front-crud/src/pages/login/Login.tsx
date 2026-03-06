@@ -25,7 +25,7 @@ function Login() {
       if (response.data && response.data.access_token) {
         const token = response.data.access_token;
         localStorage.setItem("@App:token", token);
-        const dados = jwtDecode<JwtResponse >(token)
+        const dados = jwtDecode<JwtResponse>(token)
         console.log('dados', dados)
         const userId = dados.sub;
         const userName = dados.name || "Usuário";
