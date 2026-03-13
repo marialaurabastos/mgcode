@@ -40,6 +40,16 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+
+    const email = formData.email;
+
+    const temArrobaPonto = email.split("@")[1]?.includes(".");
+
+    if (!temArrobaPonto) {
+      alert("E-mail inválido! Certifique-se de usar '@' e um '.' após ele (ex: teste@gmail.com)");
+      return;
+    }
+
     try {
       await api.post('/user', {
         name: formData.name,

@@ -42,12 +42,22 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+
+    const email = formData.email;
+
+    const temArrobaPonto = email.split("@")[1]?.includes(".");
+
+    if (!temArrobaPonto) {
+      alert("E-mail inválido! Certifique-se de usar '@' e um '.' após ele (ex: teste@gmail.com)");
+      return;
+    }
+
     try {
       await api.put(`/user/${name.id}`, {
         name: formData.name,
         email: formData.email,
         role: formData.role
-      }); 
+      });
       alert("Usuário atualizado com sucesso!");
       onUserUpdate();
       onClose();
@@ -66,20 +76,20 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
           <form className='modal-form' onSubmit={handleSubmit}>
             <div className='field-group'>
               <label>Usuário</label>
-              <input 
-                name='name' 
-                value={formData.name} 
-                onChange={handleChange} 
-                required 
+              <input
+                name='name'
+                value={formData.name}
+                onChange={handleChange}
+                required
               />
             </div>
             <div className='field-group'>
               <label>Email</label>
-              <input 
-                name='email' 
-                value={formData.email} 
-                onChange={handleChange} 
-                required 
+              <input
+                name='email'
+                value={formData.email}
+                onChange={handleChange}
+                required
               />
             </div>
             <div className='field-group'>

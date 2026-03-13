@@ -12,6 +12,14 @@ function Register() {
 
   const handleRegister = async (e: SyntheticEvent) => {
     e.preventDefault();
+
+    const temArrobaPonto = email.split("@")[1]?.includes(".");
+
+    if (!temArrobaPonto) {
+      alert("E-mail inválido! Certifique-se de usar '@' e um '.' após ele (ex: teste@gmail.com)");
+      return;
+    }
+
     if (password.length < 6) {
       alert("A senha precisa ter no mínimo 6 caracteres")
       return;
