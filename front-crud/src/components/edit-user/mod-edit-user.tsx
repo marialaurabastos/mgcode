@@ -44,10 +44,9 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
     e.preventDefault();
   
     const email = formData.email;
-    const temArroba = email.includes("@");
-    const temPonto = email.split("@")[1]?.includes(".");
+    const temPontoArroba = email.split("@")[1]?.includes(".");
 
-    if (!temArroba || !temPonto) {
+    if (!temPontoArroba) {
       alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
       return;
     }

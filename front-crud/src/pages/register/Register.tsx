@@ -13,10 +13,9 @@ function Register() {
   const handleRegister = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    const temArroba = email.includes("@");
-    const temPonto = email.split("@")[1]?.includes(".");
+    const temPontoArroba = email.split("@")[1]?.includes(".");
 
-    if (!temArroba || !temPonto) {
+    if (!temPontoArroba) {
       alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
       return;
     }
