@@ -13,8 +13,8 @@ function Register() {
   const handleRegister = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    const temArroba = email.split("@");
-    const temPonto= email.split("@")[1]?.includes(".");
+    const temArroba = email.includes("@");
+    const temPonto = email.split("@")[1]?.includes(".");
 
     if (!temArroba || !temPonto) {
       alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
@@ -56,7 +56,7 @@ function Register() {
           />
           <label>Email*</label>
           <input
-            type="email"
+            type="text"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

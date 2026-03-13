@@ -20,13 +20,14 @@ function Login() {
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    const temArroba = email.split("@");
-    const temPonto= email.split("@")[1]?.includes(".");
+    const temArroba = email.includes("@");
+    const temPonto = email.split("@")[1]?.includes(".");
 
     if (!temArroba || !temPonto) {
       alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
       return;
     }
+
 
     try {
       const response = await api.post('/auth/login', { email, password });
@@ -64,7 +65,7 @@ function Login() {
         <form className="login-form" onSubmit={handleLogin}>
           <label>Email*</label>
           <input
-            type="email"
+            type="text"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

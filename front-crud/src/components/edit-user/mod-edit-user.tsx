@@ -44,8 +44,8 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
     e.preventDefault();
   
     const email = formData.email;
-    const temArroba = email.split("@");
-    const temPonto= email.split("@")[1]?.includes(".");
+    const temArroba = email.includes("@");
+    const temPonto = email.split("@")[1]?.includes(".");
 
     if (!temArroba || !temPonto) {
       alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
@@ -86,7 +86,7 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
             <div className='field-group'>
               <label>Email</label>
               <input
-                name='email'
+                name='text'
                 value={formData.email}
                 onChange={handleChange}
                 required
