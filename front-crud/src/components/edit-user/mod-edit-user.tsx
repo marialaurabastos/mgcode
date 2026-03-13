@@ -42,13 +42,13 @@ function EditUserModal({ isOpen, onClose, name, onUserUpdate }: EditUserModalPro
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-
+  
     const email = formData.email;
+    const temArroba = email.split("@");
+    const temPonto= email.split("@")[1]?.includes(".");
 
-    const temArrobaPonto = email.split("@")[1]?.includes(".");
-
-    if (!temArrobaPonto) {
-      alert("E-mail inválido! Certifique-se de usar '@' e um '.' após ele (ex: teste@gmail.com)");
+    if (!temArroba || !temPonto) {
+      alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
       return;
     }
 

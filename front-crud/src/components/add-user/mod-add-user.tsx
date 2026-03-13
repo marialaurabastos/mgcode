@@ -42,11 +42,11 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
     e.preventDefault();
 
     const email = formData.email;
+    const temArroba = email.split("@");
+    const temPonto= email.split("@")[1]?.includes(".");
 
-    const temArrobaPonto = email.split("@")[1]?.includes(".");
-
-    if (!temArrobaPonto) {
-      alert("E-mail inválido! Certifique-se de usar '@' e um '.' após ele (ex: teste@gmail.com)");
+    if (!temArroba || !temPonto) {
+      alert("E-mail inválido! Certifique-se de usar '@' e '.' (ex: teste@gmail.com)");
       return;
     }
 
@@ -91,7 +91,7 @@ function AddUserModal({ isOpen, onClose, onUserAdded }: AddUserModalProps) {
             <div className="field-group">
               <label htmlFor="email">Email</label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 name="email"
                 value={formData.email}
