@@ -41,6 +41,7 @@ A API estará disponível em: \http://localhost:3000\
 
 Este projeto foi construído com as seguintes ferramentas:
 
+* **Frontend:** React
 * **Backend:** Node.js, NestJS, TypeScript
 * **Banco de Dados:** PostgreSQL (TypeORM)
 * **Ferramentas:** DBeaver, VS Code, Git
