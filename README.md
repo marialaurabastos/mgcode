@@ -1,4 +1,4 @@
-# Exercicio NestJS MgCode
+# CRUD NestJS
 
 Sistema de gerenciamento de tarefas desenvolvido para praticar conceitos de Fullstack, focado em organização profissional e escalabilidade.
 
